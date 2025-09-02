@@ -12,7 +12,10 @@ This guide walks you through using Docker hardened images and implementing compr
 
 ```bash
 # Pull the latest hardened image
-docker pull demonstrationorg/dhi-demo-bcg:latest
+docker pull demonstrationorg/dhi-demo-bcg:v2.0notomcat
+docker pull demonstrationorg/dhi-demo-bcg:v2.0tomcat
+docker pull demonstrationorg/dhi-demo-bcg:v1.0debian12
+docker pull demonstrationorg/dhi-demo-bcg:v1.0debian13
 
 # List available tags
 docker images demonstrationorg/dhi-demo-bcg
@@ -26,22 +29,23 @@ docker images demonstrationorg/dhi-demo-bcg
 docker scout auth login
 
 # Quick vulnerability scan
-docker scout cves demonstrationorg/dhi-demo-bcg:latest
+docker scout cves demonstrationorg/dhi-demo-bcg:v2.0notomcat
+docker scout cves demonstrationorg/dhi-demo-bcg:v2.0tomcat
+docker scout cves demonstrationorg/dhi-demo-bcg:v1.0debian12
+docker scout cves demonstrationorg/dhi-demo-bcg:v1.0debian13
 
-# Detailed security report with recommendations
-docker scout recommendations demonstrationorg/dhi-demo-bcg:latest
+
 ```
 
 ### Advanced Scout Analysis
 ```bash
 # Compare with base image vulnerabilities
-docker scout compare --to debian:12 demonstrationorg/dhi-demo-bcg:latest
+docker scout compare --to demonstrationorg/dhi-demo-bcg:v2.0tomcat demonstrationorg/dhi-demo-bcg:v2.0notomcat
 
 # Generate SBOM (Software Bill of Materials)
-docker scout sbom demonstrationorg/dhi-demo-bcg:latest
+docker scout sbom demonstrationorg/dhi-demo-bcg:v1.0debian13
 
-# Policy evaluation (if policies are configured)
-docker scout policy demonstrationorg/dhi-demo-bcg:latest
+
 ```
 
 ## Step 3: Container Runtime Deployment
@@ -49,34 +53,32 @@ docker scout policy demonstrationorg/dhi-demo-bcg:latest
 ### Basic Deployment
 ```bash
 # Run with security best practices
+
 docker run -d \
-  --name secure-app \
-  --read-only \
-  --tmpfs /tmp \
-  --tmpfs /var/run \
-  --no-new-privileges \
-  --cap-drop ALL \
-  --cap-add NET_BIND_SERVICE \
-  -p 8080:8080 \
-  demonstrationorg/dhi-demo-bcg:latest
+--name secure-app \
+--read-only \
+--tmpfs /tmp \
+--tmpfs /var/run \
+--cap-drop ALL \
+--cap-add NET_BIND_SERVICE \
+-p 8080:8080 \
+demonstrationorg/dhi-demo-bcg:v1.0debian13
 ```
 
 ### Production-Ready Deployment
 ```bash
 # Run with comprehensive security controls
 docker run -d \
-  --name production-app \
-  --read-only \
-  --tmpfs /tmp:noexec,nosuid,size=100m \
-  --tmpfs /var/run:noexec,nosuid,size=50m \
-  --no-new-privileges \
-  --cap-drop ALL \
-  --cap-add NET_BIND_SERVICE \
-  --security-opt no-new-privileges \
-  --security-opt seccomp=default \
-  --user 1001:1001 \
-  -p 8080:8080 \
-  demonstrationorg/dhi-demo-bcg:latest
+--name production-app \
+--read-only \
+--tmpfs /tmp:noexec,nosuid,size=100m \
+--tmpfs /var/run:noexec,nosuid,size=50m \
+--cap-drop ALL \
+--cap-add NET_BIND_SERVICE \
+--security-opt no-new-privileges \
+--user 1001:1001 \
+-p 8080:8080 \
+demonstrationorg/dhi-demo-bcg:v1.0debian13
 ```
 
 ## Step 4: Runtime Security Scanning
@@ -85,7 +87,7 @@ docker run -d \
 ```bash
 # Install Twistlock Defender (if not already deployed)
 # Scan running container
-twistcli images scan demonstrationorg/dhi-demo-bcg:latest
+twistcli images scan demonstrationorg/dhi-demo-bcg:v1.0debian13
 
 # Runtime compliance check
 twistcli compliance scan --container-id <container_id>
