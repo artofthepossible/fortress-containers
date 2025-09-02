@@ -60,6 +60,12 @@ twistcli images scan demonstrationorg/dhi-demo-bcg:v1.0debian13
 twistcli compliance scan --container-id <container_id>
 ```
 
+### Step 4: Run Container
+
+```bash
+docker run -d --name demo-app -p 9096:9096 demonstrationorg/dhi-demo-bcg:v1.0debian13
+```
+
 ## Troubleshooting
 
 ### Common Issues
