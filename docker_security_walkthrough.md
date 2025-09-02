@@ -48,40 +48,7 @@ docker scout sbom demonstrationorg/dhi-demo-bcg:v1.0debian13
 
 ```
 
-## Step 3: Container Runtime Deployment
-
-### Basic Deployment
-```bash
-# Run with security best practices
-
-docker run -d \
---name secure-app \
---read-only \
---tmpfs /tmp \
---tmpfs /var/run \
---cap-drop ALL \
---cap-add NET_BIND_SERVICE \
--p 8080:8080 \
-demonstrationorg/dhi-demo-bcg:v1.0debian13
-```
-
-### Production-Ready Deployment
-```bash
-# Run with comprehensive security controls
-docker run -d \
---name production-app \
---read-only \
---tmpfs /tmp:noexec,nosuid,size=100m \
---tmpfs /var/run:noexec,nosuid,size=50m \
---cap-drop ALL \
---cap-add NET_BIND_SERVICE \
---security-opt no-new-privileges \
---user 1001:1001 \
--p 8080:8080 \
-demonstrationorg/dhi-demo-bcg:v1.0debian13
-```
-
-## Step 4: Runtime Security Scanning
+## Step 3: Runtime Security Scanning
 
 ### Option A: Twistlock/Prisma Cloud
 ```bash
